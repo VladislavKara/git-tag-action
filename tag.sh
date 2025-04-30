@@ -4,7 +4,7 @@ set -eo pipefail
 
 # output config log
 echo -e "\tTYPE: ${TYPE}"
-echo -e "\DEFAULT_FIRST_VERSION: ${VERSION}"
+echo -e "\tDEFAULT_FIRST_VERSION: ${VERSION}"
 echo -e "\tVERBOSE: ${VERBOSE}"
 
 cd "${GITHUB_WORKSPACE}/" || exit 1
@@ -93,7 +93,7 @@ then
 fi
 
 commit=`git rev-parse HEAD`
-need_tag=`git describe --contains $commit`
+need_tag=`git describe --contains $commit || true`
 
 echo -e "\tCommit is $commit and contains $need_tag"
 

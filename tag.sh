@@ -18,7 +18,7 @@ fi
 # fetch tags
 git fetch --tags
 
-formatTag="^v\d+\.\d+\.\d+$"
+formatTag="^v[0-9]+\.[0-9]+\.[0-9]+$"
 
 output() {
     echo -e "${1}=${2}" >> "${GITHUB_OUTPUT}"
@@ -32,10 +32,11 @@ generate_first_tag() {
 }
 
 validate_tag() {
-    if [[ ! ${1} =~ $formatTag ]];
+    match_tag=$( (grep -E "$formatTag" <<< "${1}") || true )
+    if [[ -z $match_tag ]]; 
     then
         echo -e "\t${1} is invalid version, please, use the follow format - 0.0.0"
-        exit 1
+        exit 1  
     fi
 }
 
@@ -45,12 +46,15 @@ parse_version() {
 
     echo -e "\tLatest tag is $latest_version"
 
+    # split tag on components
     verion_bits=(${latest_version//./ })
 
+    # set major, minor and patch variables from split and remove "v" from major
     major=`echo ${verion_bits[0]} | sed 's/v//'`
     minor=${verion_bits[1]}
     patch=${verion_bits[2]}
 
+    # switch between types
     case $TYPE in
         "major")
             echo -e "\tUpdate major version"
@@ -83,8 +87,10 @@ parse_version() {
     echo -e "\tNew tag is $NEW_TAG"
 }
 
+# get list of tags
 is_existed_tag=`git ls-remote --tags origin`
 
+# create init tag if tags list is empty
 if [[ -z $is_existed_tag ]];
 then
     validate_tag $VERSION
@@ -92,6 +98,7 @@ then
     exit 0
 fi
 
+# get commit and find commit to tags
 commit=`git rev-parse HEAD`
 need_tag=`git describe --contains $commit || true`
 

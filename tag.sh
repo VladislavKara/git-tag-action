@@ -51,7 +51,7 @@ parse_version() {
     minor=${verion_bits[1]}
     patch=${verion_bits[2]}
 
-    case $VERSION in
+    case $TYPE in
         "major")
             echo -e "\tUpdate major version"
             major=$((major+1))

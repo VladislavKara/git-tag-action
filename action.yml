@@ -1,0 +1,41 @@
+name: 'Github Action Increment Tag'
+
+description: 'Create new tag with bump version and push to repository'
+
+author: 'Vladislav Kara'
+
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ github.action_path }}/tag.sh
+      id: tag-info
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+        VERBOSE: ${{ inputs.verbose }}
+        TYPE: ${{ inputs.type }}
+
+inputs:
+  type:
+    description: 'Type of new tag (major, minor, patch)'
+    required: true
+    default: 'patch'
+  verbose:
+    description: 'Debug mode'
+    default: 'false'
+  version:
+    description: 'Default first tag version'
+    required: false
+    default: '0.0.1'
+
+outputs:
+  new_tag:
+    description: 'The new generated tag'
+    value: ${{ steps.tag-info.outputs.new_tag }}
+  tag:
+    description: 'The latest tag existed tag'
+    value: ${{ steps.tag-info.outputs.tag }}
+
+branding:
+  icon: 'git-merge'
+  color: 'purple'

@@ -25,9 +25,9 @@ output() {
 }
 
 generate_first_tag() {
-    echo -e "\tFirst tag version is ${VERSION}"
-    git tag $VERSION
-    git push --tag origin $VERSION
+    echo -e "\tFirst tag version is v${VERSION}"
+    git tag v$VERSION
+    git push --tag origin v$VERSION
     output "new_tag" $VERSION
 }
 
@@ -93,7 +93,7 @@ is_existed_tag=`git ls-remote --tags origin`
 # create init tag if tags list is empty
 if [[ -z $is_existed_tag ]];
 then
-    validate_tag $VERSION
+    validate_tag v$VERSION
     generate_first_tag
     exit 0
 fi

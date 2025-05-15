@@ -26,7 +26,7 @@ output() {
 
 generate_first_tag() {
     echo -e "\tFirst tag version is ${VERSION}"
-    git tag v$VERSION
+    git tag $VERSION
     git push --tags origin $VERSION
     output "new_tag" $VERSION
 }
